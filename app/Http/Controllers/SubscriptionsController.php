@@ -20,16 +20,20 @@ class SubscriptionsController extends Controller
         $validated = $request->validate([
             'url' => 'required|url'
         ]);
-        //get the sub_id with the url
-        $urlId = Subscriber::getUrlId($request->get('url'));
-        if(empty($urlId)){
-            throw new Exception('This Url Doesnt exist');
-        }
 
-        $subscription = new Subscriptions();
-        $subscription->topic_id = $topic->id;
-        $subscription->subscriber_id = $urlId;
-        if($subscription->save()){
+        $subscriber = Subscriber::getUrlId($request->get('url'))->first();
+
+        if(empty($subscriber)){
+         $subscriber =   Subscriber::create([
+                'url' => $request->get('url')
+            ]);
+        }
+        $subscription = Subscriptions::create([
+            'topic_id' => $topic->id,
+            'subscriber_id' => $subscriber->id
+        ]);
+
+        if($subscription){
             return response()->json(['message' => 'Subscription successful'], 200);
         }
 

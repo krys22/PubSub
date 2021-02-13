@@ -9,9 +9,9 @@ class Subscriber extends Model
 {
     use HasFactory;
 
-
+    protected $fillable = ['url'];
     public function scopeGetUrlId($query, $url){
         return $query->where('url', $url)
-                ->value('id');
+                ;
     }
 }

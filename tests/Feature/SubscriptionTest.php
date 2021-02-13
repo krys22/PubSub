@@ -21,7 +21,7 @@ class SubscriptionTest extends TestCase
 
         parent::setUp();
 
-        $this->subscriber = $this->subscriber = Subscriber::factory()->create([
+        $this->subscriber = Subscriber::factory()->create([
             'url' => 'http://127.0.0.1:8000/api/test'
         ]);
         $this->topic = Topic::factory()->create();
@@ -43,7 +43,7 @@ class SubscriptionTest extends TestCase
             'body' => json_encode(['name' => 'Bolly'])
         ]);
         $response = $this->post('api/subscribe/'.$this->topic->id, [
-            'url' => $this->subscriber->url
+            'url' => 'http://127.0.0.1:8000/api/test'
         ]);
         $response->assertStatus(200);
     }
