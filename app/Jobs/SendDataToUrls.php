@@ -46,7 +46,7 @@ class SendDataToUrls
         $subscriber = Subscriber::findOrFail($this->subscription->subscriber_id);
 
             //send the events to the url
-            foreach($topic->events as $event){
+            foreach($topic->load('events')->events as $event){
                 Http::post($subscriber->url, [
                     'data' => $event->body
                 ]);

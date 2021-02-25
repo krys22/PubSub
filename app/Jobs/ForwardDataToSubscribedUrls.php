@@ -37,7 +37,9 @@ class ForwardDataToSubscribedUrls
     {
         //
 
-        $subscribers = $this->event->topic->subscribers;
+        $event = $this->event->load('topic.subscribers');
+        $subscribers = $event->topic->subscribers;
+        Log::error(json_encode($subscribers));
 
         foreach ($subscribers as $subscriber){
             Http::post($subscriber->url, [
