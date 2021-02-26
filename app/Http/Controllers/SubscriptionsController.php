@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreateSubscriptionRequest;
 use App\Models\Subscriber;
 use App\Models\Subscriptions;
 use App\Models\Topic;
+use App\Repositories\SubscriberRepository;
+use App\Repositories\SubscriptionRepository;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -14,24 +17,16 @@ class SubscriptionsController extends Controller
 {
     //
 
-    public function create(Topic $topic, Request $request){
-
-        //validate the request
-        $validated = $request->validate([
-            'url' => 'required|url'
-        ]);
+    public function create(Topic $topic, CreateSubscriptionRequest $request,
+                            SubscriberRepository $subscriberRepository,
+                            SubscriptionRepository $subscriptionRepository){
 
         $subscriber = Subscriber::getUrlId($request->get('url'))->first();
 
         if(empty($subscriber)){
-         $subscriber =   Subscriber::create([
-                'url' => $request->get('url')
-            ]);
+         $subscriber =   $subscriberRepository->create($request);
         }
-        $subscription = Subscriptions::create([
-            'topic_id' => $topic->id,
-            'subscriber_id' => $subscriber->id
-        ]);
+        $subscription = $subscriptionRepository->create($topic, $subscriber);
 
         if($subscription){
             return response()->json(['message' => 'Subscription successful'], 200);

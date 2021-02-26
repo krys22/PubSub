@@ -50,8 +50,6 @@ class SendDataToUrls
                 Http::post($subscriber->url, [
                     'data' => $event->body
                 ]);
-
-
         }
     }
 }
